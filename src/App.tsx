@@ -1,26 +1,34 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import ToDOList from "./components/ToDoList";
+import NewTodo from "./components/NewToDo";
+import "./App.css";
 
-function App() {
+export interface ToDo {
+  id: string;
+  text: string;
+}
+
+const App: React.FC = () => {
+  const [todos, setTodos] = useState<ToDo[]>([]); //array of objects
+
+  const newTaskAdd = (text: string) => {
+    const newData = { id: Math.random().toString(), text: text };
+    setTodos((previousData) => [...previousData, newData]);
+  };
+
+  const deleteTodoTask = (deletedTextId: string) => {
+    setTodos((todos) => {
+      return todos.filter((data) => data.id !== deletedTextId);
+    });
+    console.log(todos);
+  };
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Task Management</h1>
+      <NewTodo newlyAddedTask={newTaskAdd} />
+      <ToDOList items={todos} deleteTask={deleteTodoTask} />
     </div>
   );
-}
+};
 
 export default App;
